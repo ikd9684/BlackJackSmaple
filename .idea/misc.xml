@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.5786458333333333" />
+        <entry key="app/src/main/res/drawable/bg_card_with_border.xml" value="0.5796875" />
+        <entry key="app/src/main/res/drawable/bg_table_with_border.xml" value="0.5796875" />
+        <entry key="app/src/main/res/drawable/card_back.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/drawable/club_1.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/drawable/club_11_jack.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/drawable/club_12_queen.xml" value="0.5796875" />
+        <entry key="app/src/main/res/drawable/diamond_11_jack.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/drawable/heart_11_jack.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/drawable/heart_13_king.xml" value="0.5796875" />
+        <entry key="app/src/main/res/drawable/spade_1.xml" value="0.5796875" />
+        <entry key="app/src/main/res/drawable/spade_11_jack.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.46296296296296297" />
+        <entry key="app/src/main/res/layout/layout_card.xml" value="0.3527777777777778" />
+        <entry key="app/src/main/res/layout/layout_card_list_item.xml" value="0.46296296296296297" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
