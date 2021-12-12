@@ -9,9 +9,8 @@ data class Card(
     val suit: Suit,
     val number: Int,
     val rank: String,
-    val image: Int?,
-) {
     var isDown: Boolean = false
+) {
 
     enum class Suit(val mark: String) {
         Spade("♠︎"),
@@ -19,23 +18,11 @@ data class Card(
         Diamond("♦︎"),
         Heart("♥︎"),
         Joker("Joker"),
-        ;
-
-        companion object {
-
-            val normalSuits: List<Suit>
-                get() = listOf(
-                    Spade,
-                    Club,
-                    Diamond,
-                    Heart,
-                )
-        }
     }
 
     companion object {
 
-        private val faceDown = R.drawable.card_back
+        private const val FACE_DOWN = R.drawable.card_back
 
         private val drawables = mapOf(
             "Spade_1" to R.drawable.spade_1,
@@ -103,8 +90,8 @@ data class Card(
             return drawables["${suit.name}_$number"]
         }
 
-        private fun newJoker(id: Int = 0): Card {
-            return Card(Suit.Joker, id, "Joker_$id", drawable(Suit.Joker, id))
+        private fun newJoker(id: Int): Card {
+            return Card(Suit.Joker, id, "Joker_$id")
         }
 
         fun newCardList(
@@ -126,11 +113,11 @@ data class Card(
             suits.forEach { suit ->
                 rangeOfNumber.forEach { number ->
                     when (number) {
-                        1 -> cardList.add(Card(suit, 1, "A", drawable(suit, 1)))
-                        11 -> cardList.add(Card(suit, 11, "J", drawable(suit, 11)))
-                        12 -> cardList.add(Card(suit, 12, "Q", drawable(suit, 12)))
-                        13 -> cardList.add(Card(suit, 13, "K", drawable(suit, 13)))
-                        else -> cardList.add(Card(suit, number, "$number", drawable(suit, number)))
+                        1 -> cardList.add(Card(suit, 1, "A"))
+                        11 -> cardList.add(Card(suit, 11, "J"))
+                        12 -> cardList.add(Card(suit, 12, "Q"))
+                        13 -> cardList.add(Card(suit, 13, "K"))
+                        else -> cardList.add(Card(suit, number, "$number"))
                     }
                 }
             }
@@ -143,9 +130,20 @@ data class Card(
         }
     }
 
+    private val image: Int?
+        get() {
+            return when (number) {
+                1 -> drawable(suit, 1)
+                11 -> drawable(suit, 11)
+                12 -> drawable(suit, 12)
+                13 -> drawable(suit, 13)
+                else -> drawable(suit, number)
+            }
+        }
+
     fun getDrawable(context: Context): Drawable? {
         return if (isDown) {
-            ContextCompat.getDrawable(context, faceDown)
+            ContextCompat.getDrawable(context, FACE_DOWN)
         } else {
             image?.let { ContextCompat.getDrawable(context, it) }
         }
