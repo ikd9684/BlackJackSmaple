@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Black Jack Sample</string>
-    <string name="button_label_sort">昇順</string>
-    <string name="button_label_shuffle">シャッフル</string>
+    <string name="button_label_new_game">New</string>
+    <string name="button_label_next_game">Next</string>
+    <string name="button_label_hit">Hit</string>
+    <string name="button_label_stand">Stand</string>
     <string name="button_label_face_down">Down</string>
     <string name="button_label_face_open">Open</string>
 </resources>

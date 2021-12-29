@@ -24,52 +24,23 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/btnSort"
-                android:layout_width="56dp"
+                android:id="@+id/btnNew"
+                android:layout_width="54dp"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_baseline_arrow_downward_24"
+
                 app:cornerRadius="10dp"
+                app:icon="@drawable/ic_baseline_restart_alt_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/btnShuffle"
-                android:layout_width="56dp"
+                android:id="@+id/btnNext"
+                android:layout_width="54dp"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_baseline_shuffle_24"
                 app:cornerRadius="10dp"
+                app:icon="@drawable/ic_baseline_start_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <Button
-                    android:id="@+id/btnDown"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/button_label_face_down"
-                    android:textColor="@color/white"
-                    app:cornerRadius="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btnOpen"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/btnOpen"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/button_label_face_open"
-                    android:textColor="@color/white"
-                    app:cornerRadius="10dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,23 +52,39 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/bg_table_with_border"
             android:padding="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvCardList"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:clipToPadding="false"
-                android:padding="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/btnHit"
+                android:layout_width="54dp"
+                android:layout_height="wrap_content"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/ic_baseline_get_app_24"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:itemCount="54"
-                tools:listitem="@layout/layout_card_list_item" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnStand"
+                android:layout_width="54dp"
+                android:layout_height="wrap_content"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/ic_baseline_check_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

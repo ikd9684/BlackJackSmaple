@@ -1,16 +1,12 @@
 package app.ikd9684.android.study.blackjack_sample.activities_fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import app.ikd9684.android.study.blackjack_sample.R
-import app.ikd9684.android.study.blackjack_sample.activities_fragments.commons.BaseRecyclerViewAdapter
 import app.ikd9684.android.study.blackjack_sample.databinding.ActivityMainBinding
-import app.ikd9684.android.study.blackjack_sample.databinding.LayoutCardListItemBinding
-import app.ikd9684.android.study.blackjack_sample.model.Card
 import app.ikd9684.android.study.blackjack_sample.view_model.BlackJackViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -18,50 +14,59 @@ class MainActivity : AppCompatActivity() {
 
     private val bj: BlackJackViewModel by viewModels()
 
-    private val cardListAdapter = CardListAdapter()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
 
-        binding.btnSort.setOnClickListener {
-            bj.sortAscending()
-        }
-        binding.btnShuffle.setOnClickListener {
-            bj.shuffle()
-        }
-        binding.btnOpen.setOnClickListener {
-            bj.setAllFace(false)
-        }
-        binding.btnDown.setOnClickListener {
-            bj.setAllFace(true)
-        }
+        binding.btnNew.isEnabled = true
+        binding.btnNext.isEnabled = false
+        binding.btnHit.isEnabled = false
+        binding.btnStand.isEnabled = false
 
-        binding.rvCardList.layoutManager = GridLayoutManager(this, 5, RecyclerView.VERTICAL, false)
-        binding.rvCardList.adapter = cardListAdapter
+        binding.btnNew.setOnClickListener {
+            Log.d("■", "= New ===============================")
+            bj.startNewGame(listOf("プレイヤー"))
 
-        bj.cardList.observe(this) { cardList ->
-            cardListAdapter.rowData = cardList
+            binding.btnNew.isEnabled = false
+            binding.btnNext.isEnabled = false
+            binding.btnHit.isEnabled = true
+            binding.btnStand.isEnabled = true
         }
 
-        bj.cardList.value?.let { cardListAdapter.rowData = it }
-    }
+        binding.btnNext.setOnClickListener {
+            Log.d("■", "- Next ------------------------------")
+            bj.startNextPlay()
 
-    class CardListAdapter : BaseRecyclerViewAdapter<Card, LayoutCardListItemBinding>(
-        R.layout.layout_card_list_item
-    ) {
-        override fun onBindViewHolder(
-            holder: RowViewHolder<LayoutCardListItemBinding>,
-            position: Int
-        ) {
-            val card = rowData[position]
+            binding.btnNew.isEnabled = true
+            binding.btnNext.isEnabled = false
+            binding.btnHit.isEnabled = true
+            binding.btnStand.isEnabled = true
+        }
+        binding.btnHit.setOnClickListener {
+            bj.hit()
+        }
+        binding.btnStand.setOnClickListener {
+            bj.stand()
+        }
 
-            holder.binding.includeCard.card = card
-            holder.binding.includeCard.ivCard.setImageDrawable(card.getDrawable(holder.context))
+        bj.dealer.observe(this) { dealer ->
+            Log.d("■", "dealer=${dealer}")
+        }
+        bj.players.observe(this) { players ->
+            Log.d("■", "cards=${bj.cards}")
+            Log.d("■", "players=$players")
+            Log.d("■", "turn=${bj.turn}")
 
-            holder.binding.includeCard.ivCard.setOnClickListener {
-                card.isDown = card.isDown.not()
-                holder.binding.includeCard.ivCard.setImageDrawable(card.getDrawable(holder.context))
+            bj.judgeTheWinner()?.let { winner ->
+                Log.d("■", "- Finish -------------------------")
+                Log.d("■", "players=$players")
+                Log.d("■", "winner=$winner")
+
+                binding.btnNew.isEnabled = true
+                binding.btnNext.isEnabled = true
+                binding.btnHit.isEnabled = false
+                binding.btnStand.isEnabled = false
             }
         }
     }
