@@ -1,6 +1,7 @@
 package app.ikd9684.android.study.blackjack_sample.activities_fragments
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -10,9 +11,12 @@ import app.ikd9684.android.study.blackjack_sample.activities_fragments.commons.B
 import app.ikd9684.android.study.blackjack_sample.databinding.ActivityMainBinding
 import app.ikd9684.android.study.blackjack_sample.databinding.LayoutCardListItemBinding
 import app.ikd9684.android.study.blackjack_sample.model.Card
+import app.ikd9684.android.study.blackjack_sample.view_model.BlackJackViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
+    private val bj: BlackJackViewModel by viewModels()
 
     private val cardListAdapter = CardListAdapter()
 
@@ -21,47 +25,26 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.btnSort.setOnClickListener {
-            sortAscending()
+            bj.sortAscending()
         }
         binding.btnShuffle.setOnClickListener {
-            shuffle()
+            bj.shuffle()
         }
         binding.btnOpen.setOnClickListener {
-            allFaceDown(false)
+            bj.setAllFace(false)
         }
         binding.btnDown.setOnClickListener {
-            allFaceDown(true)
+            bj.setAllFace(true)
         }
 
         binding.rvCardList.layoutManager = GridLayoutManager(this, 5, RecyclerView.VERTICAL, false)
         binding.rvCardList.adapter = cardListAdapter
 
-        cardListAdapter.rowData = Card.newCardList()
-    }
-
-    private fun sortAscending() {
-        cardListAdapter.apply {
-            rowData = rowData.sortedWith(
-                compareBy({
-                    it.suit
-                }, {
-                    it.number
-                })
-            )
+        bj.cardList.observe(this) { cardList ->
+            cardListAdapter.rowData = cardList
         }
-    }
 
-    private fun shuffle() {
-        cardListAdapter.apply {
-            rowData = rowData.shuffled()
-        }
-    }
-
-    private fun allFaceDown(isDown: Boolean) {
-        cardListAdapter.rowData.forEach { card ->
-            card.isDown = isDown
-        }
-        cardListAdapter.notifyItemRangeChanged(0, cardListAdapter.rowData.size)
+        bj.cardList.value?.let { cardListAdapter.rowData = it }
     }
 
     class CardListAdapter : BaseRecyclerViewAdapter<Card, LayoutCardListItemBinding>(
