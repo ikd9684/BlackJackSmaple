@@ -44,25 +44,41 @@ class MainActivity : AppCompatActivity() {
             onClickBtnNext()
         }
         binding.btnHit.setOnClickListener {
-            bj.hit()
+            onCLickBtnHit()
         }
         binding.btnStand.setOnClickListener {
-            bj.stand()
+            onClickBtnStand()
         }
 
         binding.rvDealersCards.adapter = dealersCardListAdapter
         binding.rvPlayersCards.adapter = playersCardListAdapter
 
         bj.dealer.observe(this) { dealer ->
+            binding.btnNew.isEnabled = false
+            binding.btnNext.isEnabled = false
+            binding.btnHit.isEnabled = false
+            binding.btnStand.isEnabled = false
+
             dealersCardListAdapter.addDifference(dealer.cards)
         }
 
         bj.player.observe(this) { player ->
+            binding.btnNew.isEnabled = true
+            binding.btnNext.isEnabled = false
+            binding.btnHit.isEnabled = true
+            binding.btnStand.isEnabled = true
+
             playersCardListAdapter.addDifference(player.cards)
         }
 
         bj.turn.observe(this) { turn ->
             gameStarted = true
+
+            binding.btnNew.isEnabled = true
+            binding.btnNext.isEnabled = false
+            binding.btnHit.isEnabled = (turn.name != bj.dealerName)
+            binding.btnStand.isEnabled = (turn.name != bj.dealerName)
+
             binding.tvStatus.text = getString(R.string.label_turn, turn.name)
         }
 
@@ -121,6 +137,24 @@ class MainActivity : AppCompatActivity() {
         binding.btnStand.isEnabled = true
 
         bj.startNextPlay()
+    }
+
+    private fun onCLickBtnHit() {
+        binding.btnNew.isEnabled = false
+        binding.btnNext.isEnabled = false
+        binding.btnHit.isEnabled = false
+        binding.btnStand.isEnabled = false
+
+        bj.hit()
+    }
+
+    private fun onClickBtnStand() {
+        binding.btnNew.isEnabled = false
+        binding.btnNext.isEnabled = false
+        binding.btnHit.isEnabled = false
+        binding.btnStand.isEnabled = false
+
+        bj.stand()
     }
 
     private fun handleResultNotify(result: BJJudgement.BJResult) {
