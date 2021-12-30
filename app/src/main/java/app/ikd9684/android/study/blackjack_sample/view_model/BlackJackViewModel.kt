@@ -27,6 +27,13 @@ class BlackJackViewModel : ViewModel() {
             turnImpl.postValue(turn)
         },
         onPlayCompletion = { result ->
+            val player1Name = players.value?.firstOrNull()?.name ?: ""
+            when {
+                result.winners.any { it.name == player1Name } -> numberOfWins++
+                result.losers.any { it.name == player1Name } -> numberOfLosses++
+                else -> numberOfDraws++
+            }
+
             resultImpl.postValue(result)
         },
         onResetCards = { cards ->
@@ -67,7 +74,18 @@ class BlackJackViewModel : ViewModel() {
         }
         get() = blackJack.dealerName
 
+    var numberOfWins = 0
+        private set
+    var numberOfLosses = 0
+        private set
+    var numberOfDraws = 0
+        private set
+
     fun startNewGame(playersNameList: List<String>) {
+        numberOfWins = 0
+        numberOfLosses = 0
+        numberOfDraws = 0
+
         blackJack.startNewGame(playersNameList)
     }
 

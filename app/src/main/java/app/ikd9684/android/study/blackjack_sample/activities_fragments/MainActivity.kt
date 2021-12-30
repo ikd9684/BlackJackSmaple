@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val dealersCardListAdapter = CardListAdapter()
     private val playersCardListAdapter = CardListAdapter()
 
-    var gameStarted = false
+    private var gameStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +46,8 @@ class MainActivity : AppCompatActivity() {
 
             binding.tvDealerResult.text = ""
             binding.tvPlayer1Result.text = ""
+
+            binding.tvCumulativeMatchResult.text = ""
 
             binding.btnNew.isEnabled = false
             binding.btnNext.isEnabled = false
@@ -114,6 +116,14 @@ class MainActivity : AppCompatActivity() {
             }
             binding.tvStatus.text =
                 getString(R.string.match_result_placeholder, player1Name, player1MatchResult)
+
+            binding.tvCumulativeMatchResult.text =
+                getString(
+                    R.string.match_result_cumulative,
+                    bj.numberOfWins,
+                    bj.numberOfLosses,
+                    bj.numberOfDraws
+                )
 
             binding.btnNew.isEnabled = true
             binding.btnNext.isEnabled = true
