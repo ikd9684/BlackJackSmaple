@@ -54,32 +54,15 @@ class MainActivity : AppCompatActivity() {
         binding.rvPlayersCards.adapter = playersCardListAdapter
 
         bj.dealer.observe(this) { dealer ->
-            binding.btnNew.isEnabled = false
-            binding.btnNext.isEnabled = false
-            binding.btnHit.isEnabled = false
-            binding.btnStand.isEnabled = false
-
-            dealersCardListAdapter.addDifference(dealer.cards)
+            handleDealerNotify(dealer)
         }
 
         bj.player.observe(this) { player ->
-            binding.btnNew.isEnabled = true
-            binding.btnNext.isEnabled = false
-            binding.btnHit.isEnabled = true
-            binding.btnStand.isEnabled = true
-
-            playersCardListAdapter.addDifference(player.cards)
+            handlePlayerNotify(player)
         }
 
         bj.turn.observe(this) { turn ->
-            gameStarted = true
-
-            binding.btnNew.isEnabled = true
-            binding.btnNext.isEnabled = false
-            binding.btnHit.isEnabled = (turn.name != bj.dealerName)
-            binding.btnStand.isEnabled = (turn.name != bj.dealerName)
-
-            binding.tvStatus.text = getString(R.string.label_turn, turn.name)
+            handleTurnNotify(turn)
         }
 
         bj.result.observe(this) { result ->
@@ -155,6 +138,35 @@ class MainActivity : AppCompatActivity() {
         binding.btnStand.isEnabled = false
 
         bj.stand()
+    }
+
+    private fun handleDealerNotify(dealer: BJPlayer) {
+        binding.btnNew.isEnabled = false
+        binding.btnNext.isEnabled = false
+        binding.btnHit.isEnabled = false
+        binding.btnStand.isEnabled = false
+
+        dealersCardListAdapter.addDifference(dealer.cards)
+    }
+
+    private fun handlePlayerNotify(player: BJPlayer) {
+        binding.btnNew.isEnabled = true
+        binding.btnNext.isEnabled = false
+        binding.btnHit.isEnabled = true
+        binding.btnStand.isEnabled = true
+
+        playersCardListAdapter.addDifference(player.cards)
+    }
+
+    private fun handleTurnNotify(turn: BJPlayer) {
+        gameStarted = true
+
+        binding.btnNew.isEnabled = true
+        binding.btnNext.isEnabled = false
+        binding.btnHit.isEnabled = (turn.name != bj.dealerName)
+        binding.btnStand.isEnabled = (turn.name != bj.dealerName)
+
+        binding.tvStatus.text = getString(R.string.label_turn, turn.name)
     }
 
     private fun handleResultNotify(result: BJJudgement.BJResult) {
