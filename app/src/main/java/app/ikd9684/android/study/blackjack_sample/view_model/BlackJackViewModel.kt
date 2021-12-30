@@ -29,6 +29,9 @@ class BlackJackViewModel : ViewModel() {
         onPlayCompletion = { result ->
             resultImpl.postValue(result)
         },
+        onResetCards = { cards ->
+            resetCardsImpl.postValue(cards)
+        },
     )
 
     private val dealerImpl = MutableLiveData<BlackJack.BJPlayer>()
@@ -53,6 +56,10 @@ class BlackJackViewModel : ViewModel() {
 
     val cards: List<Card>
         get() = blackJack.cards
+
+    private val resetCardsImpl = MutableLiveData<List<Card>>()
+    val resetCards: LiveData<List<Card>>
+        get() = resetCardsImpl
 
     var dealerName: String
         set(value) {

@@ -22,4 +22,6 @@
     <string name="match_result_win">勝ち</string>
     <string name="match_result_lose">負け</string>
     <string name="match_result_draw">引き分け</string>
+
+    <string name="toast_message_reset_cards">山札をリセットしました</string>
 </resources>

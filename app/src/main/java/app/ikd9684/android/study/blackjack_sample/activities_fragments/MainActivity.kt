@@ -1,6 +1,7 @@
 package app.ikd9684.android.study.blackjack_sample.activities_fragments
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
     private val dealersCardListAdapter = CardListAdapter()
     private val playersCardListAdapter = CardListAdapter()
+
+    var gameStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         bj.turn.observe(this) { turn ->
+            gameStarted = true
             binding.tvStatus.text = getString(R.string.label_turn, turn.name)
         }
 
@@ -115,6 +119,12 @@ class MainActivity : AppCompatActivity() {
             binding.btnNext.isEnabled = true
             binding.btnHit.isEnabled = false
             binding.btnStand.isEnabled = false
+        }
+
+        bj.resetCards.observe(this) {
+            if (gameStarted) {
+                Toast.makeText(this, R.string.toast_message_reset_cards, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

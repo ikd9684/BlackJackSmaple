@@ -14,6 +14,7 @@ class BlackJack(
     private val onStandDealer: (dealer: BJPlayer) -> Unit,
     private val onChangeTurn: (turn: BJPlayer) -> Unit,
     private val onPlayCompletion: (result: BJJudgement.BJResult) -> Unit,
+    private val onResetCards: (cards: List<Card>) -> Unit,
     private val judgement: BJJudgement = BJJudgementSample(),
     private val dealerLogic: DealerLogic = DealerLogicSample(),
 ) {
@@ -211,6 +212,10 @@ class BlackJack(
     val cards: List<Card>
         get() = cardsImpl
 
+    var numberOfDeck: Int = 1
+
+    var needReset = false
+
     var turn: BJPlayer? = null
         private set
 
@@ -220,19 +225,32 @@ class BlackJack(
             playersImpl.add(BJPlayer(name))
         }
 
+        this.numberOfDeck = numberOfDeck
+
+        resetCards()
+
+        startNextPlay()
+    }
+
+    private fun resetCards() {
         cardsImpl.clear()
         repeat(numberOfDeck) {
             cardsImpl.addAll(Card.newCardList(numberOfJoker = 0))
         }
         cardsImpl.shuffle()
 
-        startNextPlay()
+        onResetCards(cardsImpl)
     }
 
     fun startNextPlay() {
         if (cardsImpl.isEmpty()) {
             throw NoNewGameException()
         }
+
+        if (needReset) {
+            resetCards()
+        }
+        needReset = false
 
         dealerImpl.reset()
         playersImpl.forEach { player ->
@@ -328,5 +346,8 @@ class BlackJack(
         judgement.judge(dealerImpl, playersImpl) { result ->
             onPlayCompletion(result)
         }
+
+        // 残り枚数が山札総数の半分を下回っていたら、次に始める前に山札をリセットする
+        needReset = (cardsImpl.size < (numberOfDeck * 52) / 2)
     }
 }
