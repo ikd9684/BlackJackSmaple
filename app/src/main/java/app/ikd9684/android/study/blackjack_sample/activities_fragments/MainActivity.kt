@@ -9,9 +9,10 @@ import app.ikd9684.android.study.blackjack_sample.R
 import app.ikd9684.android.study.blackjack_sample.activities_fragments.commons.BaseRecyclerViewAdapter
 import app.ikd9684.android.study.blackjack_sample.databinding.ActivityMainBinding
 import app.ikd9684.android.study.blackjack_sample.databinding.LayoutCardListItemBinding
-import app.ikd9684.android.study.blackjack_sample.logic.BlackJack
-import app.ikd9684.android.study.blackjack_sample.model.Card
-import app.ikd9684.android.study.blackjack_sample.view_model.BlackJackViewModel
+import app.ikd9684.android.study.blackjack_sample.logic.BJJudgement
+import app.ikd9684.android.study.blackjack_sample.models.BJPlayer
+import app.ikd9684.android.study.blackjack_sample.view_models.BlackJackViewModel
+import app.ikd9684.android.study.commons.models.Card
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getResultString(player: BlackJack.BJPlayer): String {
+    private fun getResultString(player: BJPlayer): String {
         return when {
             player.isNaturalBlackJack -> getString(R.string.result_natural_blackjack)
             player.isBlackJack -> getString(R.string.result_blackjack)
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         bj.startNextPlay()
     }
 
-    private fun handleResultNotify(result: BlackJack.BJJudgement.BJResult) {
+    private fun handleResultNotify(result: BJJudgement.BJResult) {
         dealersCardListAdapter.apply {
             notifyItemRangeChanged(0, itemCount)
         }

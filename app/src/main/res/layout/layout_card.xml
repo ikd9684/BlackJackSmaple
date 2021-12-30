@@ -9,11 +9,11 @@
 
         <import type="android.graphics.Color" />
 
-        <import type="app.ikd9684.android.study.blackjack_sample.model.Card.Suit" />
+        <import type="app.ikd9684.android.study.commons.models.Card" />
 
         <variable
             name="card"
-            type="app.ikd9684.android.study.blackjack_sample.model.Card" />
+            type="app.ikd9684.android.study.commons.models.Card" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

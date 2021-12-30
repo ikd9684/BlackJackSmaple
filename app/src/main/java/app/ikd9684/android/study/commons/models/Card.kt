@@ -1,4 +1,4 @@
-package app.ikd9684.android.study.blackjack_sample.model
+package app.ikd9684.android.study.commons.models
 
 import android.content.Context
 import android.graphics.drawable.Drawable

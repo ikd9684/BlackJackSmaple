@@ -1,4 +1,4 @@
-package app.ikd9684.android.study.blackjack_sample.model
+package app.ikd9684.android.study.commons.models
 
 open class Player(
     val name: String,
