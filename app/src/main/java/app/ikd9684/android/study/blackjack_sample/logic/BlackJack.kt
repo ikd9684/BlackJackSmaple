@@ -95,7 +95,7 @@ class BlackJack(
                     isBust -> "Bust"
                     isNaturalBlackJack -> "NaturalBlackJack"
                     isBlackJack -> "BlackJack"
-                    else -> "Not BlackJack"
+                    else -> ""
                 }
             val countStr = if (isDown) "?" else "$count"
             return "$name($status count=$countStr, cards=$cardsImpl)"
