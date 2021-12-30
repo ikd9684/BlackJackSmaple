@@ -1,7 +1,6 @@
 package app.ikd9684.android.study.blackjack_sample.activities_fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -31,8 +30,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnStand.isEnabled = false
 
         binding.btnNew.setOnClickListener {
-            Log.d("■", "= New ===============================")
-
             dealersCardListAdapter.clearItem()
             playersCardListAdapter.clearItem()
 
@@ -49,8 +46,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnNext.setOnClickListener {
-            Log.d("■", "- Next ------------------------------")
-
             dealersCardListAdapter.clearItem()
             playersCardListAdapter.clearItem()
 
@@ -72,44 +67,18 @@ class MainActivity : AppCompatActivity() {
         binding.rvPlayersCards.adapter = playersCardListAdapter
 
         bj.dealer.observe(this) { dealer ->
-            Log.d("■", "- Dealer -------------------------")
-            Log.d("■", "cards=${bj.cards}")
-            Log.d("■", "dealer=${dealer}")
-
             dealersCardListAdapter.addDifference(dealer.cards)
         }
 
         bj.player.observe(this) { player ->
-            Log.d("■", "- Player -------------------------")
-            Log.d("■", "dealer=${bj.dealer.value}")
-            Log.d("■", "player=$player")
-
             playersCardListAdapter.addDifference(player.cards)
         }
 
-        bj.players.observe(this) { players ->
-            Log.d("■", "- Players -------------------------")
-            Log.d("■", "cards=${bj.cards}")
-            Log.d("■", "dealer=${bj.dealer.value}")
-            Log.d("■", "players=$players")
-        }
-
         bj.turn.observe(this) { turn ->
-            Log.d("■", "- Turn -------------------------")
-            Log.d("■", "dealer=${bj.dealer.value}")
-            Log.d("■", "players=${bj.players.value}")
-            Log.d("■", "turn=$turn")
-
             binding.tvStatus.text = getString(R.string.label_turn, turn.name)
         }
 
         bj.result.observe(this) { result ->
-            Log.d("■", "- Finish -------------------------")
-            Log.d("■", "dealer=${bj.dealer.value}")
-            Log.d("■", "winner=${result.winners}")
-            Log.d("■", "loser=${result.losers}")
-            Log.d("■", "draws=${result.draws}")
-
             val player1Name = bj.players.value?.firstOrNull()?.name ?: ""
             val player1Result = when {
                 result.winners.any { it.name == player1Name } -> getString(R.string.result_win)
@@ -142,11 +111,6 @@ class MainActivity : AppCompatActivity() {
 
             holder.binding.includeCard.card = card
             holder.binding.includeCard.ivCard.setImageDrawable(card.getDrawable(holder.context))
-
-//            holder.binding.includeCard.ivCard.setOnClickListener {
-//                card.isDown = card.isDown.not()
-//                holder.binding.includeCard.ivCard.setImageDrawable(card.getDrawable(holder.context))
-//            }
         }
     }
 }
