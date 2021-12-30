@@ -36,40 +36,11 @@ class MainActivity : AppCompatActivity() {
         bj.dealerName = getString(R.string.label_dealer)
 
         binding.btnNew.setOnClickListener {
-            dealersCardListAdapter.clearItem()
-            playersCardListAdapter.clearItem()
-
-            val player1Name = "プレイヤー1"
-
-            binding.tvDealer.text = getString(R.string.label_dealer)
-            binding.tvPlayer1.text = player1Name
-
-            binding.tvDealerResult.text = ""
-            binding.tvPlayer1Result.text = ""
-
-            binding.tvCumulativeMatchResult.text = ""
-
-            binding.btnNew.isEnabled = false
-            binding.btnNext.isEnabled = false
-            binding.btnHit.isEnabled = true
-            binding.btnStand.isEnabled = true
-
-            bj.startNewGame(listOf(player1Name))
+            onClickBtnNew()
         }
 
         binding.btnNext.setOnClickListener {
-            dealersCardListAdapter.clearItem()
-            playersCardListAdapter.clearItem()
-
-            binding.tvDealerResult.text = ""
-            binding.tvPlayer1Result.text = ""
-
-            binding.btnNew.isEnabled = true
-            binding.btnNext.isEnabled = false
-            binding.btnHit.isEnabled = true
-            binding.btnStand.isEnabled = true
-
-            bj.startNextPlay()
+            onClickBtnNext()
         }
         binding.btnHit.setOnClickListener {
             bj.hit()
@@ -95,40 +66,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         bj.result.observe(this) { result ->
-            dealersCardListAdapter.apply {
-                notifyItemRangeChanged(0, itemCount)
-            }
-
-            val dealerName = bj.dealer.value?.name ?: ""
-            val dealerResult = bj.dealer.value?.let { getResultString(it) }
-            binding.tvDealerResult.text =
-                getString(R.string.result_placeholder, dealerName, dealerResult)
-
-            val player1Name = bj.players.value?.firstOrNull()?.name ?: ""
-            val player1Result = bj.players.value?.firstOrNull()?.let { getResultString(it) }
-            binding.tvPlayer1Result.text =
-                getString(R.string.result_placeholder, player1Name, player1Result)
-
-            val player1MatchResult = when {
-                result.winners.any { it.name == player1Name } -> getString(R.string.match_result_win)
-                result.losers.any { it.name == player1Name } -> getString(R.string.match_result_lose)
-                else -> getString(R.string.match_result_draw)
-            }
-            binding.tvStatus.text =
-                getString(R.string.match_result_placeholder, player1Name, player1MatchResult)
-
-            binding.tvCumulativeMatchResult.text =
-                getString(
-                    R.string.match_result_cumulative,
-                    bj.numberOfWins,
-                    bj.numberOfLosses,
-                    bj.numberOfDraws
-                )
-
-            binding.btnNew.isEnabled = true
-            binding.btnNext.isEnabled = true
-            binding.btnHit.isEnabled = false
-            binding.btnStand.isEnabled = false
+            handleResultNotify(result)
         }
 
         bj.resetCards.observe(this) {
@@ -145,6 +83,80 @@ class MainActivity : AppCompatActivity() {
             player.count <= 21 -> "${player.count}"
             else -> getString(R.string.result_bust)
         }
+    }
+
+    private fun onClickBtnNew() {
+        dealersCardListAdapter.clearItem()
+        playersCardListAdapter.clearItem()
+
+        val player1Name = "プレイヤー1"
+
+        binding.tvDealer.text = getString(R.string.label_dealer)
+        binding.tvPlayer1.text = player1Name
+
+        binding.tvDealerResult.text = ""
+        binding.tvPlayer1Result.text = ""
+
+        binding.tvCumulativeMatchResult.text = ""
+
+        binding.btnNew.isEnabled = false
+        binding.btnNext.isEnabled = false
+        binding.btnHit.isEnabled = true
+        binding.btnStand.isEnabled = true
+
+        bj.startNewGame(listOf(player1Name))
+    }
+
+    private fun onClickBtnNext() {
+        dealersCardListAdapter.clearItem()
+        playersCardListAdapter.clearItem()
+
+        binding.tvDealerResult.text = ""
+        binding.tvPlayer1Result.text = ""
+
+        binding.btnNew.isEnabled = true
+        binding.btnNext.isEnabled = false
+        binding.btnHit.isEnabled = true
+        binding.btnStand.isEnabled = true
+
+        bj.startNextPlay()
+    }
+
+    private fun handleResultNotify(result: BlackJack.BJJudgement.BJResult) {
+        dealersCardListAdapter.apply {
+            notifyItemRangeChanged(0, itemCount)
+        }
+
+        val dealerName = bj.dealer.value?.name ?: ""
+        val dealerResult = bj.dealer.value?.let { getResultString(it) }
+        binding.tvDealerResult.text =
+            getString(R.string.result_placeholder, dealerName, dealerResult)
+
+        val player1Name = bj.players.value?.firstOrNull()?.name ?: ""
+        val player1Result = bj.players.value?.firstOrNull()?.let { getResultString(it) }
+        binding.tvPlayer1Result.text =
+            getString(R.string.result_placeholder, player1Name, player1Result)
+
+        val player1MatchResult = when {
+            result.winners.any { it.name == player1Name } -> getString(R.string.match_result_win)
+            result.losers.any { it.name == player1Name } -> getString(R.string.match_result_lose)
+            else -> getString(R.string.match_result_draw)
+        }
+        binding.tvStatus.text =
+            getString(R.string.match_result_placeholder, player1Name, player1MatchResult)
+
+        binding.tvCumulativeMatchResult.text =
+            getString(
+                R.string.match_result_cumulative,
+                bj.numberOfWins,
+                bj.numberOfLosses,
+                bj.numberOfDraws
+            )
+
+        binding.btnNew.isEnabled = true
+        binding.btnNext.isEnabled = true
+        binding.btnHit.isEnabled = false
+        binding.btnStand.isEnabled = false
     }
 
     class CardListAdapter : BaseRecyclerViewAdapter<Card, LayoutCardListItemBinding>(
