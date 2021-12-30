@@ -68,40 +68,67 @@
                 android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="ディーラー：" />
+                tools:text="@string/label_dealer" />
 
             <TextView
                 android:id="@+id/tvPlayer1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="30dp"
                 android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDealer"
-                tools:text="プレイヤー1：" />
+                app:layout_constraintTop_toBottomOf="@+id/rvDealersCards"
+                tools:text="プレイヤー1" />
 
-            <TextView
-                android:id="@+id/tvPlayer2"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPlayersCards"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:textColor="@android:color/white"
+                android:layout_marginEnd="10dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvPlayer1"
-                tools:text="プレイヤー2：" />
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:itemCount="3"
+                tools:listitem="@layout/layout_card_list_item" />
 
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="30dp"
                 android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvPlayer2"
+                app:layout_constraintTop_toBottomOf="@+id/rvPlayersCards"
                 tools:text="プレイヤー1の番です" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDealersCards"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDealer"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:itemCount="3"
+                tools:listitem="@layout/layout_card_list_item" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,9 +1,20 @@
 <resources>
     <string name="app_name">Black Jack Sample</string>
+
     <string name="button_label_new_game">New</string>
     <string name="button_label_next_game">Next</string>
     <string name="button_label_hit">Hit</string>
     <string name="button_label_stand">Stand</string>
     <string name="button_label_face_down">Down</string>
     <string name="button_label_face_open">Open</string>
+
+    <string name="label_dealer">ディーラー</string>
+    <string name="label_player">Player</string>
+
+    <string name="label_turn">%1$sの番です</string>
+
+    <string name="result_placeholder">%1$s：%2$s</string>
+    <string name="result_win">勝ち</string>
+    <string name="result_lose">負け</string>
+    <string name="result_draw">引き分け</string>
 </resources>

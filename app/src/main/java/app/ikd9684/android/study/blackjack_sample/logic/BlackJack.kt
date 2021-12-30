@@ -129,7 +129,6 @@ class BlackJack(
                     onHit()
                 }
             }
-            dealer.allOpen()
             onStand()
         }
     }
@@ -226,6 +225,7 @@ class BlackJack(
             throw NoNewGameException()
         }
 
+        dealerImpl.reset()
         playersImpl.forEach { player ->
             player.reset()
         }
@@ -241,9 +241,9 @@ class BlackJack(
                 // プレイヤーのカードは全部開く
                 dealOutACardTo(player, false)
                 onHitPlayer(player, playersImpl)
-                onChangeTurn(initialTurn)
             }
         }
+        onChangeTurn(initialTurn)
     }
 
     fun hit() {
@@ -313,6 +313,8 @@ class BlackJack(
 
     private fun judge() {
         turn ?: run { throw NoNewGameException() }
+
+        dealerImpl.allOpen()
 
         judgement.judge(dealerImpl, playersImpl) { result ->
             onPlayCompletion(result)
