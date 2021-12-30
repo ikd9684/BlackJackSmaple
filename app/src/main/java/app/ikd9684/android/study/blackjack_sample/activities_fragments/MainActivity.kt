@@ -8,6 +8,7 @@ import app.ikd9684.android.study.blackjack_sample.R
 import app.ikd9684.android.study.blackjack_sample.activities_fragments.commons.BaseRecyclerViewAdapter
 import app.ikd9684.android.study.blackjack_sample.databinding.ActivityMainBinding
 import app.ikd9684.android.study.blackjack_sample.databinding.LayoutCardListItemBinding
+import app.ikd9684.android.study.blackjack_sample.logic.BlackJack
 import app.ikd9684.android.study.blackjack_sample.model.Card
 import app.ikd9684.android.study.blackjack_sample.view_model.BlackJackViewModel
 
@@ -29,32 +30,41 @@ class MainActivity : AppCompatActivity() {
         binding.btnHit.isEnabled = false
         binding.btnStand.isEnabled = false
 
+        bj.dealerName = getString(R.string.label_dealer)
+
         binding.btnNew.setOnClickListener {
             dealersCardListAdapter.clearItem()
             playersCardListAdapter.clearItem()
 
             val player1Name = "プレイヤー1"
-            bj.startNewGame(listOf(player1Name))
 
             binding.tvDealer.text = getString(R.string.label_dealer)
             binding.tvPlayer1.text = player1Name
+
+            binding.tvDealerResult.text = ""
+            binding.tvPlayer1Result.text = ""
 
             binding.btnNew.isEnabled = false
             binding.btnNext.isEnabled = false
             binding.btnHit.isEnabled = true
             binding.btnStand.isEnabled = true
+
+            bj.startNewGame(listOf(player1Name))
         }
 
         binding.btnNext.setOnClickListener {
             dealersCardListAdapter.clearItem()
             playersCardListAdapter.clearItem()
 
-            bj.startNextPlay()
+            binding.tvDealerResult.text = ""
+            binding.tvPlayer1Result.text = ""
 
             binding.btnNew.isEnabled = true
             binding.btnNext.isEnabled = false
             binding.btnHit.isEnabled = true
             binding.btnStand.isEnabled = true
+
+            bj.startNextPlay()
         }
         binding.btnHit.setOnClickListener {
             bj.hit()
@@ -79,24 +89,41 @@ class MainActivity : AppCompatActivity() {
         }
 
         bj.result.observe(this) { result ->
-            val player1Name = bj.players.value?.firstOrNull()?.name ?: ""
-            val player1Result = when {
-                result.winners.any { it.name == player1Name } -> getString(R.string.result_win)
-                result.losers.any { it.name == player1Name } -> getString(R.string.result_lose)
-                else -> getString(R.string.result_draw)
-            }
-
             dealersCardListAdapter.apply {
                 notifyItemRangeChanged(0, itemCount)
             }
 
-            binding.tvStatus.text =
+            val dealerName = bj.dealer.value?.name ?: ""
+            val dealerResult = bj.dealer.value?.let { getResultString(it) }
+            binding.tvDealerResult.text =
+                getString(R.string.result_placeholder, dealerName, dealerResult)
+
+            val player1Name = bj.players.value?.firstOrNull()?.name ?: ""
+            val player1Result = bj.players.value?.firstOrNull()?.let { getResultString(it) }
+            binding.tvPlayer1Result.text =
                 getString(R.string.result_placeholder, player1Name, player1Result)
+
+            val player1MatchResult = when {
+                result.winners.any { it.name == player1Name } -> getString(R.string.match_result_win)
+                result.losers.any { it.name == player1Name } -> getString(R.string.match_result_lose)
+                else -> getString(R.string.match_result_draw)
+            }
+            binding.tvStatus.text =
+                getString(R.string.match_result_placeholder, player1Name, player1MatchResult)
 
             binding.btnNew.isEnabled = true
             binding.btnNext.isEnabled = true
             binding.btnHit.isEnabled = false
             binding.btnStand.isEnabled = false
+        }
+    }
+
+    private fun getResultString(player: BlackJack.BJPlayer): String {
+        return when {
+            player.isNaturalBlackJack -> getString(R.string.result_natural_blackjack)
+            player.isBlackJack -> getString(R.string.result_blackjack)
+            player.count <= 21 -> "${player.count}"
+            else -> getString(R.string.result_bust)
         }
     }
 

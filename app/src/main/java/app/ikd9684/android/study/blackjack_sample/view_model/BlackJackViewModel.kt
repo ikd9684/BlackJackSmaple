@@ -28,7 +28,7 @@ class BlackJackViewModel : ViewModel() {
         },
         onPlayCompletion = { result ->
             resultImpl.postValue(result)
-        }
+        },
     )
 
     private val dealerImpl = MutableLiveData<BlackJack.BJPlayer>()
@@ -53,6 +53,12 @@ class BlackJackViewModel : ViewModel() {
 
     val cards: List<Card>
         get() = blackJack.cards
+
+    var dealerName: String
+        set(value) {
+            blackJack.dealerName = value
+        }
+        get() = blackJack.dealerName
 
     fun startNewGame(playersNameList: List<String>) {
         blackJack.startNewGame(playersNameList)

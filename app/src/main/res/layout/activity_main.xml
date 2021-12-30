@@ -70,6 +70,25 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/label_dealer" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDealersCards"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDealer"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:itemCount="3"
+                tools:listitem="@layout/layout_card_list_item" />
+
             <TextView
                 android:id="@+id/tvPlayer1"
                 android:layout_width="wrap_content"
@@ -100,35 +119,47 @@
                 tools:itemCount="3"
                 tools:listitem="@layout/layout_card_list_item" />
 
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutStatus"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="30dp"
-                android:textColor="@android:color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rvPlayersCards"
-                tools:text="プレイヤー1の番です" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvDealersCards"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDealer"
-                tools:ignore="SpeakableTextPresentCheck"
-                tools:itemCount="3"
-                tools:listitem="@layout/layout_card_list_item" />
+                app:layout_constraintTop_toBottomOf="@+id/rvPlayersCards">
+
+                <TextView
+                    android:id="@+id/tvDealerResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="ディーラー は ブラックジャック" />
+
+                <TextView
+                    android:id="@+id/tvPlayer1Result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDealerResult"
+                    tools:text="プレイヤー1 は ブラックジャック" />
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPlayer1Result"
+                    tools:text="プレイヤー1の番です" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

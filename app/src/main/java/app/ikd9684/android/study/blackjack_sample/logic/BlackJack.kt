@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 class BlackJack(
     private val onHitPlayer: (player: BJPlayer, players: List<BJPlayer>) -> Unit,
     private val onStandPlayer: (player: BJPlayer, players: List<BJPlayer>) -> Unit,
-    private val onHitDealer: (dealer: BJPlayer.BJDealer) -> Unit,
-    private val onStandDealer: (dealer: BJPlayer.BJDealer) -> Unit,
+    private val onHitDealer: (dealer: BJPlayer) -> Unit,
+    private val onStandDealer: (dealer: BJPlayer) -> Unit,
     private val onChangeTurn: (turn: BJPlayer) -> Unit,
     private val onPlayCompletion: (result: BJJudgement.BJResult) -> Unit,
     private val judgement: BJJudgement = BJJudgementSample(),
@@ -21,23 +21,10 @@ class BlackJack(
     class NoNewGameException :
         IllegalStateException("No new game have been started")
 
-    class IllegalPlayerNameException(name: String) :
-        IllegalArgumentException("You cannot specify that name as a player name: $name")
-
     open class BJPlayer(name: String) : Player(name) {
 
-        class BJDealer : BJPlayer(DEALER_NAME)
-
         companion object {
-            private const val DEALER_NAME = "dealer"
-
             var debug = false
-        }
-
-        init {
-            if (this::class != BJDealer::class && name.lowercase() == DEALER_NAME) {
-                throw IllegalPlayerNameException(name)
-            }
         }
 
         private val cardsImpl = mutableListOf<Card>()
@@ -109,7 +96,7 @@ class BlackJack(
 
     interface DealerLogic {
         fun compute(
-            dealer: BJPlayer.BJDealer,
+            dealer: BJPlayer,
             players: List<BJPlayer>,
             doHit: () -> Unit,
             doStand: () -> Unit
@@ -119,7 +106,7 @@ class BlackJack(
     class DealerLogicSample : DealerLogic {
 
         override fun compute(
-            dealer: BJPlayer.BJDealer,
+            dealer: BJPlayer,
             players: List<BJPlayer>,
             doHit: () -> Unit,
             doStand: () -> Unit
@@ -155,7 +142,7 @@ class BlackJack(
         )
 
         fun judge(
-            dealer: BJPlayer.BJDealer,
+            dealer: BJPlayer,
             players: List<BJPlayer>,
             completion: (result: BJResult) -> Unit
         )
@@ -170,7 +157,7 @@ class BlackJack(
         // ・点数が同じ場合は引き分け
         // ・２枚でブラックジャック（ナチュラルブラックジャック）と３枚以上のブラックジャックがあったらナチュラルブラックジャックの勝ち
         override fun judge(
-            dealer: BJPlayer.BJDealer,
+            dealer: BJPlayer,
             players: List<BJPlayer>,
             completion: (result: BJJudgement.BJResult) -> Unit
         ) {
@@ -210,7 +197,15 @@ class BlackJack(
     val players: List<BJPlayer>
         get() = playersImpl
 
-    private val dealerImpl = BJPlayer.BJDealer()
+    var dealerName: String = "Dealer"
+        set(value) {
+            // ディーラーの名前の変更はディーラーの入れ替えに相当するので、ゲームを開始したら名前は変えられない
+            turn ?: run {
+                field = value
+                dealerImpl = BJPlayer(value)
+            }
+        }
+    private var dealerImpl = BJPlayer(dealerName)
 
     private val cardsImpl = mutableListOf<Card>()
     val cards: List<Card>
