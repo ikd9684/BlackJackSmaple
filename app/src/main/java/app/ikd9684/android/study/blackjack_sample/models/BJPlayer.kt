@@ -1,5 +1,6 @@
 package app.ikd9684.android.study.blackjack_sample.models
 
+import app.ikd9684.android.study.blackjack_sample.logic.BlackJack.Status
 import app.ikd9684.android.study.commons.models.Card
 import app.ikd9684.android.study.commons.models.Player
 
@@ -46,13 +47,32 @@ open class BJPlayer(name: String) : Player(name) {
     val isNaturalBlackJack: Boolean
         get() = isBlackJack && cardsImpl.size == 2
 
-    val status: String
+    val status: Status
         get() = when {
-            isBust -> "Bust"
-            isNaturalBlackJack -> "NaturalBlackJack"
-            isBlackJack -> "BlackJack"
-            else -> ""
+            isBust -> Status.Bust
+            isNaturalBlackJack -> Status.NaturalBlackJack
+            isBlackJack -> Status.BlackJack
+            else -> Status.None
         }
+
+    var numberOfWins = 0
+        private set
+    var numberOfLosses = 0
+        private set
+    var numberOfDraws = 0
+        private set
+
+    fun plusNumberOfWins() {
+        numberOfWins++
+    }
+
+    fun plusNumberOfLosses() {
+        numberOfLosses++
+    }
+
+    fun plusNumberOfDraws() {
+        numberOfDraws++
+    }
 
     fun reset() {
         cardsImpl.clear()
@@ -70,7 +90,7 @@ open class BJPlayer(name: String) : Player(name) {
 
     override fun toString(): String {
         val isDown = debug.not() && cardsImpl.any { it.isDown }
-        val statusStr = if (isDown) "?" else status
+        val statusStr = if (isDown) "?" else if (status == Status.None) "" else status.name
         val countStr = if (isDown) "?" else "$count"
         return "$name($statusStr count=$countStr, cards=$cardsImpl)"
     }

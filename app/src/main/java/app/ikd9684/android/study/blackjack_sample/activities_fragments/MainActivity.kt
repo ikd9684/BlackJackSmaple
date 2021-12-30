@@ -149,9 +149,9 @@ class MainActivity : AppCompatActivity() {
         binding.tvCumulativeMatchResult.text =
             getString(
                 R.string.match_result_cumulative,
-                bj.numberOfWins,
-                bj.numberOfLosses,
-                bj.numberOfDraws
+                bj.players.value?.firstOrNull()?.numberOfWins,
+                bj.players.value?.firstOrNull()?.numberOfLosses,
+                bj.players.value?.firstOrNull()?.numberOfDraws,
             )
 
         binding.btnNew.isEnabled = true

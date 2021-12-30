@@ -15,6 +15,13 @@ class BlackJack(
     private val dealerLogic: DealerLogic = DealerLogicSample(),
 ) {
 
+    enum class Status {
+        Bust,
+        BlackJack,
+        NaturalBlackJack,
+        None,
+    }
+
     class NoNewGameException :
         IllegalStateException("No new game have been started")
 
@@ -36,12 +43,11 @@ class BlackJack(
     val cards: List<Card>
         get() = cardsImpl
 
-    var numberOfDeck: Int = 1
+    private var numberOfDeck: Int = 1
 
-    var needReset = false
+    private var needReset = false
 
-    var turn: BJPlayer? = null
-        private set
+    private var turn: BJPlayer? = null
 
     fun startNewGame(playersNameList: List<String>, numberOfDeck: Int = 1) {
         playersImpl.clear()
