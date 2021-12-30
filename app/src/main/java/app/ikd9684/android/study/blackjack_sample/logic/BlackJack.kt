@@ -2,6 +2,10 @@ package app.ikd9684.android.study.blackjack_sample.logic
 
 import app.ikd9684.android.study.blackjack_sample.model.Card
 import app.ikd9684.android.study.blackjack_sample.model.Player
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class BlackJack(
     private val onHitPlayer: (player: BJPlayer, players: List<BJPlayer>) -> Unit,
@@ -107,8 +111,8 @@ class BlackJack(
         fun compute(
             dealer: BJPlayer.BJDealer,
             players: List<BJPlayer>,
-            onHit: () -> Unit,
-            onStand: () -> Unit
+            doHit: () -> Unit,
+            doStand: () -> Unit
         )
     }
 
@@ -117,19 +121,29 @@ class BlackJack(
         override fun compute(
             dealer: BJPlayer.BJDealer,
             players: List<BJPlayer>,
-            onHit: () -> Unit,
-            onStand: () -> Unit
+            doHit: () -> Unit,
+            doStand: () -> Unit
         ) {
-            players.filter {
-                it.count <= 21
-            }.maxOfOrNull {
-                it.count
-            }?.let { playersMaxCount ->
-                while (dealer.count < playersMaxCount || dealer.count < 17) {
-                    onHit()
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(1000) // それっぽい待ち時間
+
+                players.filter {
+                    it.count <= 21
+                }.maxOfOrNull {
+                    it.count
+                }?.let { playersMaxCount ->
+                    var firstTime = true
+                    while (dealer.count < playersMaxCount || dealer.count < 17) {
+                        if (firstTime.not()) {
+                            delay(1000) // それっぽい待ち時間
+                        }
+                        firstTime = false
+
+                        doHit()
+                    }
                 }
+                doStand()
             }
-            onStand()
         }
     }
 
@@ -268,11 +282,11 @@ class BlackJack(
         dealerLogic.compute(
             dealerImpl,
             playersImpl,
-            onHit = {
+            doHit = {
                 dealOutACardTo(dealerImpl, false)
                 onHitDealer(dealerImpl)
             },
-            onStand = {
+            doStand = {
                 onStandDealer(dealerImpl)
                 judge()
             }
