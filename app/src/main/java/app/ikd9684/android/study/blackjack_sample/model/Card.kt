@@ -24,6 +24,8 @@ data class Card(
 
         private const val FACE_DOWN = R.drawable.card_back
 
+        var debug = false
+
         private val drawables = mapOf(
             "Spade_1" to R.drawable.spade_1,
             "Spade_2" to R.drawable.spade_2,
@@ -95,6 +97,7 @@ data class Card(
         }
 
         fun newCardList(
+            allDown: Boolean = true,
             suits: Set<Suit> = setOf(Suit.Spade, Suit.Club, Suit.Diamond, Suit.Heart),
             rangeOfNumber: Set<Int> = (1..13).toSet(),
             numberOfJoker: Int = 3
@@ -126,7 +129,7 @@ data class Card(
                 cardList.add(newJoker(id))
             }
 
-            return cardList
+            return cardList.onEach { it.isDown = allDown }
         }
     }
 
@@ -161,6 +164,10 @@ data class Card(
     }
 
     override fun toString(): String {
-        return "${suit.mark}$rank"
+        return if (debug) {
+            "${if (isDown) "# " else ""}${suit.mark}$rank"
+        } else {
+            if (isDown) "###" else "${suit.mark}$rank"
+        }
     }
 }

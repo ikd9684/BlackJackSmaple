@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnNew.setOnClickListener {
             Log.d("■", "= New ===============================")
-            bj.startNewGame(listOf("プレイヤー"))
+            bj.startNewGame(listOf("プレイヤー1", "プレイヤー2"))
 
             binding.btnNew.isEnabled = false
             binding.btnNext.isEnabled = false
@@ -51,23 +51,42 @@ class MainActivity : AppCompatActivity() {
         }
 
         bj.dealer.observe(this) { dealer ->
+            Log.d("■", "- Dealer -------------------------")
+            Log.d("■", "cards=${bj.cards}")
             Log.d("■", "dealer=${dealer}")
         }
+
+        bj.player.observe(this) { player ->
+            Log.d("■", "- Player -------------------------")
+            Log.d("■", "dealer=${bj.dealer.value}")
+            Log.d("■", "player=$player")
+        }
+
         bj.players.observe(this) { players ->
+            Log.d("■", "- Players -------------------------")
             Log.d("■", "cards=${bj.cards}")
+            Log.d("■", "dealer=${bj.dealer.value}")
             Log.d("■", "players=$players")
-            Log.d("■", "turn=${bj.turn}")
+        }
 
-            bj.judgeTheWinner()?.let { winner ->
-                Log.d("■", "- Finish -------------------------")
-                Log.d("■", "players=$players")
-                Log.d("■", "winner=$winner")
+        bj.turn.observe(this) { turn ->
+            Log.d("■", "- Turn -------------------------")
+            Log.d("■", "dealer=${bj.dealer.value}")
+            Log.d("■", "players=${bj.players.value}")
+            Log.d("■", "turn=$turn")
+        }
 
-                binding.btnNew.isEnabled = true
-                binding.btnNext.isEnabled = true
-                binding.btnHit.isEnabled = false
-                binding.btnStand.isEnabled = false
-            }
+        bj.result.observe(this) { result ->
+            Log.d("■", "- Finish -------------------------")
+            Log.d("■", "dealer=${bj.dealer.value}")
+            Log.d("■", "winner=${result.winners}")
+            Log.d("■", "loser=${result.losers}")
+            Log.d("■", "draws=${result.draws}")
+
+            binding.btnNew.isEnabled = true
+            binding.btnNext.isEnabled = true
+            binding.btnHit.isEnabled = false
+            binding.btnStand.isEnabled = false
         }
     }
 }
