@@ -54,6 +54,11 @@ class MainActivity : AppCompatActivity() {
             Log.d("■", "- Dealer -------------------------")
             Log.d("■", "cards=${bj.cards}")
             Log.d("■", "dealer=${dealer}")
+
+            val isDown = dealer.cards.any { it.isDown }
+            val statusStr = if (isDown) "?" else dealer.status
+            val countStr = if (isDown) "?" else "${dealer.count}"
+            binding.tvDealer.text = "ディーラー：$statusStr $countStr ${dealer.cards}"
         }
 
         bj.player.observe(this) { player ->
@@ -67,6 +72,15 @@ class MainActivity : AppCompatActivity() {
             Log.d("■", "cards=${bj.cards}")
             Log.d("■", "dealer=${bj.dealer.value}")
             Log.d("■", "players=$players")
+
+            players[0].let { player ->
+                binding.tvPlayer1.text =
+                    "${player.name}：${player.status} ${player.count} ${player.cards}"
+            }
+            players[1].let { player ->
+                binding.tvPlayer2.text =
+                    "${player.name}：${player.status} ${player.count} ${player.cards}"
+            }
         }
 
         bj.turn.observe(this) { turn ->
@@ -74,6 +88,8 @@ class MainActivity : AppCompatActivity() {
             Log.d("■", "dealer=${bj.dealer.value}")
             Log.d("■", "players=${bj.players.value}")
             Log.d("■", "turn=$turn")
+
+            binding.tvStatus.text = "${turn.name} の番です"
         }
 
         bj.result.observe(this) { result ->
@@ -82,6 +98,21 @@ class MainActivity : AppCompatActivity() {
             Log.d("■", "winner=${result.winners}")
             Log.d("■", "loser=${result.losers}")
             Log.d("■", "draws=${result.draws}")
+
+            val player1Name = bj.players.value?.get(0)?.name ?: ""
+            val player1Result = when {
+                result.winners.any { it.name == player1Name } -> "勝ち"
+                result.losers.any { it.name == player1Name } -> "負け"
+                else -> "引き分け"
+            }
+            val player2Name = bj.players.value?.get(1)?.name ?: ""
+            val player2Result = when {
+                result.winners.any { it.name == player2Name } -> "勝ち"
+                result.losers.any { it.name == player2Name } -> "負け"
+                else -> "引き分け"
+            }
+
+            binding.tvStatus.text = "プレイヤー1：$player1Result\nプレイヤー2：$player2Result"
 
             binding.btnNew.isEnabled = true
             binding.btnNext.isEnabled = true

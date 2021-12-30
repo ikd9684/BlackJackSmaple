@@ -73,6 +73,14 @@ class BlackJack(
         val isNaturalBlackJack: Boolean
             get() = isBlackJack && cardsImpl.size == 2
 
+        val status: String
+            get() = when {
+                isBust -> "Bust"
+                isNaturalBlackJack -> "NaturalBlackJack"
+                isBlackJack -> "BlackJack"
+                else -> ""
+            }
+
         fun reset() {
             cardsImpl.clear()
         }
@@ -89,16 +97,9 @@ class BlackJack(
 
         override fun toString(): String {
             val isDown = debug.not() && cardsImpl.any { it.isDown }
-            val status =
-                when {
-                    isDown -> "?"
-                    isBust -> "Bust"
-                    isNaturalBlackJack -> "NaturalBlackJack"
-                    isBlackJack -> "BlackJack"
-                    else -> ""
-                }
+            val statusStr = if (isDown) "?" else status
             val countStr = if (isDown) "?" else "$count"
-            return "$name($status count=$countStr, cards=$cardsImpl)"
+            return "$name($statusStr count=$countStr, cards=$cardsImpl)"
         }
     }
 

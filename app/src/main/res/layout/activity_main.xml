@@ -13,7 +13,7 @@
         tools:context=".activities_fragments.MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
+            android:id="@+id/layoutUpperButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -25,9 +25,9 @@
 
             <Button
                 android:id="@+id/btnNew"
-                android:layout_width="54dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:text="@string/button_label_new_game"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_baseline_restart_alt_24"
                 app:layout_constraintStart_toStartOf="parent"
@@ -35,8 +35,9 @@
 
             <Button
                 android:id="@+id/btnNext"
-                android:layout_width="54dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/button_label_next_game"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_baseline_start_24"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +45,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutTable"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
@@ -52,13 +54,58 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/bg_table_with_border"
             android:padding="1dp"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
+            app:layout_constraintBottom_toTopOf="@+id/layoutBottomButtons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/layoutUpperButtons">
+
+            <TextView
+                android:id="@+id/tvDealer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="ディーラー：" />
+
+            <TextView
+                android:id="@+id/tvPlayer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="70dp"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDealer"
+                tools:text="プレイヤー1：" />
+
+            <TextView
+                android:id="@+id/tvPlayer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvPlayer1"
+                tools:text="プレイヤー2：" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="70dp"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvPlayer2"
+                tools:text="プレイヤー1の番です" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout3"
+            android:id="@+id/layoutBottomButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -70,8 +117,9 @@
 
             <Button
                 android:id="@+id/btnHit"
-                android:layout_width="54dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/button_label_hit"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_baseline_get_app_24"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,8 +127,9 @@
 
             <Button
                 android:id="@+id/btnStand"
-                android:layout_width="54dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/button_label_stand"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_baseline_check_24"
                 app:layout_constraintEnd_toEndOf="parent"
