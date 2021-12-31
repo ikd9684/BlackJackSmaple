@@ -29,7 +29,7 @@ open class BJPlayer(name: String) : Player(name) {
         get() = handsImpl.all { it.isBust }
 
     val hasBlackJack: Boolean
-        get() = handsImpl.any { it.isBlackJack }
+        get() = handsImpl.any { it.isBlackJack && 2 < it.cards.size }
 
     val hasNaturalBlackJack: Boolean
         get() = handsImpl.any { it.isBlackJack && it.cards.size == 2 }
