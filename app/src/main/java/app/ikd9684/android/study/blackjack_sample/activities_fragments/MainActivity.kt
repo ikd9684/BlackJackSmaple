@@ -2,6 +2,8 @@ package app.ikd9684.android.study.blackjack_sample.activities_fragments
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -14,6 +16,7 @@ import app.ikd9684.android.study.blackjack_sample.activities_fragments.commons.B
 import app.ikd9684.android.study.blackjack_sample.databinding.ActivityMainBinding
 import app.ikd9684.android.study.blackjack_sample.databinding.LayoutCardListItemBinding
 import app.ikd9684.android.study.blackjack_sample.logic.BJJudgement
+import app.ikd9684.android.study.blackjack_sample.models.BJHand
 import app.ikd9684.android.study.blackjack_sample.models.BJPlayer
 import app.ikd9684.android.study.blackjack_sample.view_models.BlackJackViewModel
 import app.ikd9684.android.study.commons.models.Card
@@ -83,8 +86,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getResultString(player: BJPlayer): String {
-        val hand = player.hands.first()
+    private fun getResultString(hand: BJHand?): String {
+        hand ?: return ""
         return when {
             hand.isNaturalBlackJack -> getString(R.string.result_natural_blackjack)
             hand.isBlackJack -> getString(R.string.result_blackjack)
@@ -178,40 +181,56 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleResultNotify(result: BJJudgement.BJResult) {
-        dealersCardListAdapter.apply {
-            notifyItemRangeChanged(0, itemCount)
-        }
+        val dealer = bj.dealer.value
+        val dealerName = dealer?.name ?: ""
+        val dealerFirstHand = dealer?.hands?.first()
+        val dealerResult = getResultString(dealerFirstHand)
 
-        val dealerName = bj.dealer.value?.name ?: ""
-        val dealerResult = bj.dealer.value?.let { getResultString(it) }
-        binding.tvDealerResult.text =
-            getString(R.string.result_placeholder, dealerName, dealerResult)
+        val player1 = bj.players.value?.firstOrNull()
+        val player1Name = player1?.name ?: ""
+        val player1FirstHand = player1?.hands?.first()
+        val player1Result = getResultString(player1FirstHand)
 
-        val player1Name = bj.players.value?.firstOrNull()?.name ?: ""
-        val player1Result = bj.players.value?.firstOrNull()?.let { getResultString(it) }
         binding.tvPlayer1Result.text =
             getString(R.string.result_placeholder, player1Name, player1Result)
 
-        val player1MatchResult = when {
-            result.winners.any { it.name == player1Name } -> getString(R.string.match_result_win)
-            result.losers.any { it.name == player1Name } -> getString(R.string.match_result_lose)
-            else -> getString(R.string.match_result_draw)
+        val showMatchResult = {
+            val player1MatchResult = when {
+                result.winners.any { it.name == player1Name } -> getString(R.string.match_result_win)
+                result.losers.any { it.name == player1Name } -> getString(R.string.match_result_lose)
+                else -> getString(R.string.match_result_draw)
+            }
+            binding.tvStatus.text =
+                getString(R.string.match_result_placeholder, player1Name, player1MatchResult)
+
+            binding.tvCumulativeMatchResult.text =
+                getString(
+                    R.string.match_result_cumulative,
+                    bj.players.value?.firstOrNull()?.numberOfWins,
+                    bj.players.value?.firstOrNull()?.numberOfLosses,
+                    bj.players.value?.firstOrNull()?.numberOfDraws,
+                )
+
+            binding.btnNew.isEnabled = true
+            binding.btnNext.isEnabled = true
+            binding.btnHit.isEnabled = false
+            binding.btnStand.isEnabled = false
         }
-        binding.tvStatus.text =
-            getString(R.string.match_result_placeholder, player1Name, player1MatchResult)
 
-        binding.tvCumulativeMatchResult.text =
-            getString(
-                R.string.match_result_cumulative,
-                bj.players.value?.firstOrNull()?.numberOfWins,
-                bj.players.value?.firstOrNull()?.numberOfLosses,
-                bj.players.value?.firstOrNull()?.numberOfDraws,
-            )
+        if (player1FirstHand?.isBust?.not() == true) {
+            // ディーラーの２枚目の伏せてあるカードを開く（ちょっとディレイしているのは演出上の都合）
+            // プレイヤーが“バスト”していたら閉じたまま
+            Handler(Looper.getMainLooper()).postDelayed({
+                dealersCardListAdapter.notifyItemChanged(1)
 
-        binding.btnNew.isEnabled = true
-        binding.btnNext.isEnabled = true
-        binding.btnHit.isEnabled = false
-        binding.btnStand.isEnabled = false
+                binding.tvDealerResult.text =
+                    getString(R.string.result_placeholder, dealerName, dealerResult)
+
+                showMatchResult()
+            }, 500)
+        } else {
+            showMatchResult()
+        }
     }
 
     class CardListAdapter : BaseRecyclerViewAdapter<Card, LayoutCardListItemBinding>(
