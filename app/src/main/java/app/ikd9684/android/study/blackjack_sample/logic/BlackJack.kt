@@ -109,7 +109,8 @@ class BlackJack(
         dealOutACardTo(turn, false)
         onHitPlayer(turn, playersImpl)
 
-        if (21 <= turn.selectedHand.count) {
+        if (21 < turn.selectedHand.count) {
+            // バストしてたら自動的に次のターンに進む
             turnToNext()
         }
     }
