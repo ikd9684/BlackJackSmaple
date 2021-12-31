@@ -20,23 +20,23 @@ open class BJJudgementSample : BJJudgement {
         val draws = mutableListOf<BJPlayer>()
 
         players.forEach { player ->
-            if (player.isBust) {
+            if (player.isAllBust) {
                 losers.add(player)
-            } else if (dealer.isBust) {
+            } else if (dealer.isAllBust) {
                 winners.add(player)
-            } else if ((dealer.isNaturalBlackJack && player.isNaturalBlackJack) || (dealer.isBlackJack && player.isBlackJack)) {
+            } else if ((dealer.hasNaturalBlackJack && player.hasNaturalBlackJack) || (dealer.hasBlackJack && player.hasBlackJack)) {
                 draws.add(player)
-            } else if (dealer.isNaturalBlackJack) {
+            } else if (dealer.hasNaturalBlackJack) {
                 losers.add(player)
-            } else if (player.isNaturalBlackJack) {
+            } else if (player.hasNaturalBlackJack) {
                 winners.add(player)
-            } else if (dealer.isBlackJack) {
+            } else if (dealer.hasBlackJack) {
                 losers.add(player)
-            } else if (player.isBlackJack) {
+            } else if (player.hasBlackJack) {
                 winners.add(player)
-            } else if (player.count < dealer.count) {
+            } else if ((player.validMaxCount ?: 0) < (dealer.validMaxCount ?: 0)) {
                 losers.add(player)
-            } else if (dealer.count < player.count) {
+            } else if ((dealer.validMaxCount ?: 0) < (player.validMaxCount ?: 0)) {
                 winners.add(player)
             } else {
                 draws.add(player)

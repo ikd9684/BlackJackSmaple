@@ -10,50 +10,29 @@ open class BJPlayer(name: String) : Player(name) {
         var debug = false
     }
 
-    private val cardsImpl = mutableListOf<Card>()
-    val cards: List<Card>
-        get() = cardsImpl
+    private var handsIndex = 0
 
-    val count: Int
-        get() {
-            var count = 0
+    private val handsImpl = mutableListOf<BJHand>()
+    val hands: List<BJHand>
+        get() = handsImpl
 
-            cardsImpl.filter { 1 < it.number }.onEach { card ->
-                count += if (card.number in 11..13) {
-                    10
-                } else {
-                    card.number
-                }
-            }
-            val numberOfAces = cardsImpl.count { it.number == 1 }
-            if (0 < numberOfAces) {
-                if (numberOfAces == 1) {
-                    count += if (count + 11 <= 21) 11 else 1
-                } else {
-                    count += ((numberOfAces - 1) * 1)
-                    count += if (count + 11 <= 21) 11 else 1
-                }
-            }
+    val selectedHand: BJHand
+        get() = handsImpl[handsIndex]
 
-            return count
-        }
+    val validHands: List<BJHand>
+        get() = handsImpl.filter { it.isBust.not() }
 
-    val isBust: Boolean
-        get() = 21 < count
+    val validMaxCount: Int?
+        get() = validHands.maxOfOrNull { it.count }
 
-    val isBlackJack: Boolean
-        get() = count == 21
+    val isAllBust: Boolean
+        get() = handsImpl.all { it.isBust }
 
-    val isNaturalBlackJack: Boolean
-        get() = isBlackJack && cardsImpl.size == 2
+    val hasBlackJack: Boolean
+        get() = handsImpl.any { it.isBlackJack }
 
-    val status: Status
-        get() = when {
-            isBust -> Status.Bust
-            isNaturalBlackJack -> Status.NaturalBlackJack
-            isBlackJack -> Status.BlackJack
-            else -> Status.None
-        }
+    val hasNaturalBlackJack: Boolean
+        get() = handsImpl.any { it.isBlackJack && it.cards.size == 2 }
 
     var numberOfWins = 0
         private set
@@ -61,6 +40,15 @@ open class BJPlayer(name: String) : Player(name) {
         private set
     var numberOfDraws = 0
         private set
+
+    fun selectNextHand(): Boolean {
+        return if (handsIndex < handsImpl.size - 1) {
+            handsIndex++
+            true
+        } else {
+            false
+        }
+    }
 
     fun plusNumberOfWins() {
         numberOfWins++
@@ -75,23 +63,30 @@ open class BJPlayer(name: String) : Player(name) {
     }
 
     fun reset() {
-        cardsImpl.clear()
+        handsIndex = 0
+        handsImpl.clear()
+        handsImpl.add(BJHand())
     }
 
     fun deal(card: Card) {
-        cardsImpl.add(card)
+        handsImpl[handsIndex].deal(card)
     }
 
     fun allOpen() {
-        cardsImpl.forEach {
-            it.isDown = false
+        handsImpl.forEach {
+            it.allOpen()
         }
     }
 
     override fun toString(): String {
-        val isDown = debug.not() && cardsImpl.any { it.isDown }
-        val statusStr = if (isDown) "?" else if (status == Status.None) "" else status.name
-        val countStr = if (isDown) "?" else "$count"
-        return "$name($statusStr count=$countStr, cards=$cardsImpl)"
+        val result = mutableListOf<String>()
+        handsImpl.forEachIndexed { i, bjHand ->
+            val isDown = debug.not() && bjHand.hasDown
+            val status = bjHand.status
+            val statusStr = if (isDown) "?" else if (status == Status.None) "" else status.name
+            val countStr = if (isDown) "?" else "$bjHand.count"
+            result.add("$name(hand#$i: $statusStr count=$countStr, cards=${bjHand.cards})")
+        }
+        return result.joinToString(", ")
     }
 }

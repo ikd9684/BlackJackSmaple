@@ -77,10 +77,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getResultString(player: BJPlayer): String {
+        val hand = player.hands.first()
         return when {
-            player.isNaturalBlackJack -> getString(R.string.result_natural_blackjack)
-            player.isBlackJack -> getString(R.string.result_blackjack)
-            player.count <= 21 -> "${player.count}"
+            hand.isNaturalBlackJack -> getString(R.string.result_natural_blackjack)
+            hand.isBlackJack -> getString(R.string.result_blackjack)
+            hand.count <= 21 -> "${hand.count}"
             else -> getString(R.string.result_bust)
         }
     }
@@ -146,7 +147,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnHit.isEnabled = false
         binding.btnStand.isEnabled = false
 
-        dealersCardListAdapter.addDifference(dealer.cards)
+        dealersCardListAdapter.addDifference(dealer.hands.first().cards)
     }
 
     private fun handlePlayerNotify(player: BJPlayer) {
@@ -155,7 +156,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnHit.isEnabled = true
         binding.btnStand.isEnabled = true
 
-        playersCardListAdapter.addDifference(player.cards)
+        playersCardListAdapter.addDifference(player.hands.first().cards)
     }
 
     private fun handleTurnNotify(turn: BJPlayer) {

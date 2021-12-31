@@ -109,7 +109,7 @@ class BlackJack(
         dealOutACardTo(turn, false)
         onHitPlayer(turn, playersImpl)
 
-        if (21 <= turn.count) {
+        if (21 <= turn.selectedHand.count) {
             turnToNext()
         }
     }
@@ -158,7 +158,7 @@ class BlackJack(
     }
 
     private fun dealOutACardTo(player: BJPlayer, isDown: Boolean): Card? {
-        if (player.count < 21) {
+        if (player.selectedHand.count < 21) {
             cardsImpl.removeFirstOrNull()?.let { card ->
                 card.isDown = isDown
                 player.deal(card)

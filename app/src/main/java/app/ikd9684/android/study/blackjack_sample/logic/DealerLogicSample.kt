@@ -17,19 +17,23 @@ class DealerLogicSample : DealerLogic {
         CoroutineScope(Dispatchers.IO).launch {
             delay(1000) // それっぽい待ち時間
 
-            players.filter {
-                it.count <= 21
-            }.maxOfOrNull {
-                it.count
-            }?.let { playersMaxCount ->
-                var firstTime = true
-                while (dealer.count < 17 || dealer.count < playersMaxCount) {
-                    if (firstTime.not()) {
-                        delay(1000) // それっぽい待ち時間
-                    }
-                    firstTime = false
+            players.mapNotNull {
+                it.validMaxCount
+            }.maxOrNull()?.let { playersValidMaxCount ->
+                dealer.validMaxCount?.let {
+                    var dealerValidMaxCount = it
 
-                    doHit()
+                    var firstTime = true
+                    while (dealerValidMaxCount < 17 || dealerValidMaxCount < playersValidMaxCount) {
+                        if (firstTime.not()) {
+                            delay(1000) // それっぽい待ち時間
+                        }
+                        firstTime = false
+
+                        doHit()
+
+                        dealerValidMaxCount = dealer.validMaxCount ?: break
+                    }
                 }
             }
             doStand()
