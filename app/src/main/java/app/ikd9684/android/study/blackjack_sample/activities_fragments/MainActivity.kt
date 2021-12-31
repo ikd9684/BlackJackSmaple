@@ -1,10 +1,14 @@
 package app.ikd9684.android.study.blackjack_sample.activities_fragments
 
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import app.ikd9684.android.study.blackjack_sample.R
 import app.ikd9684.android.study.blackjack_sample.activities_fragments.commons.BaseRecyclerViewAdapter
 import app.ikd9684.android.study.blackjack_sample.databinding.ActivityMainBinding
@@ -13,6 +17,7 @@ import app.ikd9684.android.study.blackjack_sample.logic.BJJudgement
 import app.ikd9684.android.study.blackjack_sample.models.BJPlayer
 import app.ikd9684.android.study.blackjack_sample.view_models.BlackJackViewModel
 import app.ikd9684.android.study.commons.models.Card
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -51,7 +56,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.rvDealersCards.adapter = dealersCardListAdapter
+        binding.rvDealersCards.addItemDecoration(CardItemDecorator(-40, 4))
         binding.rvPlayersCards.adapter = playersCardListAdapter
+        binding.rvPlayersCards.addItemDecoration(CardItemDecorator(-40, 4))
 
         bj.dealer.observe(this) { dealer ->
             handleDealerNotify(dealer)
@@ -218,6 +225,24 @@ class MainActivity : AppCompatActivity() {
 
             holder.binding.includeCard.card = card
             holder.binding.includeCard.ivCard.setImageDrawable(card.getDrawable(holder.context))
+        }
+    }
+
+    class CardItemDecorator(
+        private val xOffset: Int,
+        private val yOffset: Int
+    ) : ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            val position = parent.getChildAdapterPosition(view)
+            if (position != 0) {
+                outRect.left = xOffset
+                outRect.top = yOffset * position
+            }
         }
     }
 }
